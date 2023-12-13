@@ -111,7 +111,7 @@ impl Gym {
         // }
     }
 
-    pub fn step(&mut self, actions: Vec<Vec<f32>>) -> (Vec<Vec<f32>>, Vec<f32>, bool, HashMap<String, f32>) {
+    pub fn step(&mut self, actions: Vec<Vec<f32>>) -> (Vec<Vec<f32>>, Vec<f32>, bool, HashMap<String, f32>, GameState) {
         let actions = self._game_match.parse_actions(actions, &self._prev_state);
         // let act_res = self._send_actions(actions);
 
@@ -161,7 +161,7 @@ impl Gym {
         let reward = self._game_match.get_rewards(&gym_state, done);
         let mut info = HashMap::<String, f32>::new();
         info.insert("result".to_string(), self._game_match.get_result(&gym_state) as f32);
-        (obs, reward, done, info)
+        (obs, reward, done, info, gym_state)
     }
 
     pub fn close_renderer(&mut self) {
