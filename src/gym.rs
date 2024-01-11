@@ -57,7 +57,7 @@ impl Gym {
         gym
     }
 
-    pub fn reset(&mut self, _return_info: Option<bool>, seed: Option<u64>) -> Vec<Vec<f32>> {
+    pub fn reset(&mut self, _return_info: Option<bool>, seed: Option<u64>) -> (Vec<Vec<f32>>, GameState) {
         // let _return_info = match _return_info {
         //     Some(return_info) => return_info,
         //     None => false
@@ -95,7 +95,7 @@ impl Gym {
         self._game_match.episode_reset(&gym_state);
         self._prev_state = gym_state.clone();
 
-        self._game_match.build_observations(&gym_state)
+        (self._game_match.build_observations(&gym_state), gym_state)
         // TODO return Option except that state and get_result don't match
         // if _return_info {
         //     let mut h_m = HashMap::<&str,f64>::new();
