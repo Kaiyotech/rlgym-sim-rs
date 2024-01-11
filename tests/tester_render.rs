@@ -113,7 +113,7 @@ fn main() {
     let mut last_blue_score_tick = 0;
     let mut last_done_tick = 0;
     for _i in 0..((120/tick_skip) * 5) {
-        let (_obs, reward, done, _info) = gym.step(actions.clone());
+        let (_obs, reward, done, _info, _) = gym.step(actions.clone());
         let mut state = gym._prev_state.clone();
 
         if done {
@@ -165,7 +165,7 @@ fn main() {
     let start_time = Instant::now();
     let mut last_orange_score = 0;
     for _i in 0..((120/tick_skip) * 5) {
-        let (_obs, reward, done, _info) = gym.step(actions.clone());
+        let (_obs, reward, done, _info, _) = gym.step(actions.clone());
         let state = gym._prev_state.clone();
 
         if state.orange_score != last_orange_score {
@@ -205,7 +205,7 @@ fn main() {
     let mut last_orange_score = 0;
     let mut touch_counter = 0;
     for _i in 0..((120/tick_skip) * 50) {
-        let (_obs, reward, done, _info) = gym.step(actions.clone());
+        let (_obs, reward, done, _info, _) = gym.step(actions.clone());
         let state = gym._prev_state.clone();
         if state.orange_score != last_orange_score {
             last_orange_score = state.orange_score;
@@ -274,7 +274,7 @@ fn main() {
     let mut last_bumped_id = 0;
     let mut last_bumpee_id = 0;
     for _i in 0..((120/tick_skip) * 50) {
-        let (_obs, reward, done, _info) = gym.step(actions2.clone());
+        let (_obs, reward, done, _info, _) = gym.step(actions2.clone());
         let mut state = gym._prev_state.clone();
         if done {
             gym.reset(None, None);

@@ -88,7 +88,7 @@ fn main() {
 
     gym.reset(None, None);
     
-    let (obs, _, _, _) = gym.step(actions);
+    let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();
     assert!(length == 1, "obs was not of correct length for 1v0, was: {length}");
     assert!(gym._prev_state.players.iter().all(|player| (player.car_id <= 6 && player.car_id >= 0)), "car ids in state did not work correctly in 1v0");
@@ -102,7 +102,7 @@ fn main() {
 
     gym.reset(None, None);
     let actions = vec![vec![2., 1., 0., 1., 0., 1., 0., 1.]; 2];
-    let (obs, _, _, _) = gym.step(actions);
+    let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();
     assert!(length == 2, "obs was not of correct length for 2v0, was: {length}");
     assert!(gym._prev_state.players.iter().all(|player| (player.car_id <= 6 && player.car_id >= 0)), "car ids in state did not work correctly in 2v0");
@@ -115,7 +115,7 @@ fn main() {
     gym.update_config(new_config, Some(obs_build_vec));
     gym.reset(None, None);
     let actions = vec![vec![2., 1., 0., 1., 0., 1., 0., 1.]; 3];
-    let (obs, _, _, _) = gym.step(actions);
+    let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();
     assert!(length == 3, "obs was not of correct length for 3v0, was: {length}");
     assert!(gym._prev_state.players.iter().all(|player| (player.car_id <= 6 && player.car_id >= 0)), "car ids in state did not work correctly in 3v0");
@@ -131,7 +131,7 @@ fn main() {
 
     gym.reset(None, None);
     let actions = vec![vec![2., 1., 0., 1., 0., 1., 0., 1.]; 2];
-    let (obs, _, _, _) = gym.step(actions);
+    let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();
     assert!(length == 2, "obs was not of correct length for 1v1, was: {length}");
     assert!(gym._prev_state.players.iter().all(|player| (player.car_id <= 6 && player.car_id >= 0)), "car ids in state did not work correctly in 1v1");
@@ -145,7 +145,7 @@ fn main() {
 
     gym.reset(None, None);
     let actions = vec![vec![2., 1., 0., 1., 0., 1., 0., 1.]; 4];
-    let (obs, _, _, _) = gym.step(actions);
+    let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();
     assert!(length == 4, "obs was not of correct length for 2v2, was: {length}");
     assert!(gym._prev_state.players.iter().all(|player| (player.car_id <= 6 && player.car_id >= 0)), "car ids in state did not work correctly in 2v2");
@@ -158,7 +158,7 @@ fn main() {
     gym.update_config(new_config, Some(obs_build_vec));
     gym.reset(None, None);
     let actions = vec![vec![2., 1., 0., 1., 0., 1., 0., 1.]; 6];
-    let (obs, _, _, _) = gym.step(actions);
+    let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();
     assert!(length == 6, "obs was not of correct length for 3v3, was: {length}");
     assert!(gym._prev_state.players.iter().all(|player| (player.car_id <= 6 && player.car_id >= 0)), "car ids in state did not work correctly in 3v3");
