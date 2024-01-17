@@ -25,6 +25,8 @@ impl WeightedSampleSetter {
 impl StateSetter for WeightedSampleSetter {
     fn reset(&mut self, state_wrapper: &mut StateWrapper) {
         let choice = self.distribution.sample(&mut self.rng);
+        // dbg!(choice);
+        // dbg!(state_wrapper.cars.len());
         self.state_setters[choice].reset(state_wrapper);
     }
 
