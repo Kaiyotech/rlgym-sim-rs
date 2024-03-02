@@ -87,7 +87,7 @@ fn main() {
 
     // -- start testing self-play=false --
 
-    gym.reset(None, None);
+    gym.reset(None, None, None);
     
     let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();
@@ -101,7 +101,7 @@ fn main() {
     }
     gym.update_config(new_config, Some(obs_build_vec));
 
-    gym.reset(None, None);
+    gym.reset(None, None, None);
     let actions = vec![vec![2., 1., 0., 1., 0., 1., 0., 1.]; 2];
     let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();
@@ -114,7 +114,7 @@ fn main() {
         obs_build_vec.push(Box::new(AdvancedObs::new()));
     }
     gym.update_config(new_config, Some(obs_build_vec));
-    gym.reset(None, None);
+    gym.reset(None, None, None);
     let actions = vec![vec![2., 1., 0., 1., 0., 1., 0., 1.]; 3];
     let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();
@@ -130,7 +130,7 @@ fn main() {
     }
     gym.update_config(new_config, Some(obs_build_vec));
 
-    gym.reset(None, None);
+    gym.reset(None, None, None);
     let actions = vec![vec![2., 1., 0., 1., 0., 1., 0., 1.]; 2];
     let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();
@@ -144,7 +144,7 @@ fn main() {
     }
     gym.update_config(new_config, Some(obs_build_vec));
 
-    gym.reset(None, None);
+    gym.reset(None, None, None);
     let actions = vec![vec![2., 1., 0., 1., 0., 1., 0., 1.]; 4];
     let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();
@@ -157,7 +157,7 @@ fn main() {
         obs_build_vec.push(Box::new(AdvancedObs::new()));
     }
     gym.update_config(new_config, Some(obs_build_vec));
-    gym.reset(None, None);
+    gym.reset(None, None, None);
     let actions = vec![vec![2., 1., 0., 1., 0., 1., 0., 1.]; 6];
     let (obs, _, _, _, _) = gym.step(actions);
     let length = obs.len();

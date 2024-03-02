@@ -62,7 +62,7 @@ impl EventReward {
 }
 
 impl RewardFn for EventReward {
-    fn reset(&mut self, initial_state: &GameState) {
+    fn reset(&mut self, initial_state: &GameState, _: Option<usize>) {
         self.last_registered_values.clear();
         for player in &initial_state.players {
             let id = player.car_id;
@@ -101,7 +101,7 @@ impl VelocityReward {
 }
 
 impl RewardFn for VelocityReward {
-    fn reset(&mut self, _initial_state: &GameState) {}
+    fn reset(&mut self, _initial_state: &GameState, _: Option<usize>) {}
 
     fn get_reward(&mut self, player: &PlayerData, _state: &GameState) -> f32 {
         // let norm = norm_func(&player.car_data.linear_velocity);
@@ -129,7 +129,7 @@ impl Default for SaveBoostReward {
 }
 
 impl RewardFn for SaveBoostReward {
-    fn reset(&mut self, _initial_state: &GameState) {}
+    fn reset(&mut self, _initial_state: &GameState, _: Option<usize>) {}
 
     fn get_reward(&mut self, player: &PlayerData, _state: &GameState) -> f32 {
         player.boost_amount.sqrt()

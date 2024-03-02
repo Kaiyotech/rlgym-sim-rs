@@ -124,7 +124,7 @@ fn main() {
     };
     let mut gym = make::make(game_config, None);
 
-    // let obs = gym.reset(None, None);
+    // let obs = gym.reset(None, None, None);
     // last_state;
     // obs;
     // test rotation matrix stuff
@@ -282,7 +282,7 @@ fn main() {
     // let rew_f32: f32 = rew.iter().sum();
     // println!("{rew_f32}");
     // --END--
-    // gym.reset(None, None);
+    // gym.reset(None, None, None);
     // gym.step(actions.clone());
 
     // let mut state_vec: Vec<GameState> = Vec::new();
@@ -293,7 +293,7 @@ fn main() {
     //     let (_obs, reward, done, _info) = gym.step(actions.clone());
     //     let state = gym._prev_state.clone();
     //     if done {
-    //         gym.reset(None, None);
+    //         gym.reset(None, None, None);
     //     }
     //     let info_val = *_info.get("result").unwrap();
     //     if info_val > 0. {
@@ -320,7 +320,7 @@ fn main() {
 
     // now let's make sure blue goals are working ---------------------------------------------------------------------------------------------------
     gym._game_match._state_setter = Box::new(BlueGoalStateTester::new());
-    gym.reset(None, None);
+    gym.reset(None, None, None);
     // gym.step(actions.clone());
 
     let mut state_vec: Vec<GameState> = Vec::new();
@@ -336,7 +336,7 @@ fn main() {
         if done {
             assert!(last_done_tick + ((tick_skip*2) as u64) < state.tick_num, "scored within {tick_skip}*2 ticks which is too close");
             last_done_tick = state.tick_num;
-            gym.reset(None, None);
+            gym.reset(None, None, None);
             state = gym._prev_state.clone();
         }
         if state.blue_score != last_blue_score {
@@ -381,7 +381,7 @@ fn main() {
 
     // now let's make sure orange goals are working ---------------------------------------------------------------------------------------------------
     gym._game_match._state_setter = Box::new(OrangeGoalStateTester::new());
-    gym.reset(None, None);
+    gym.reset(None, None, None);
     // gym.step(actions.clone());
 
     let mut state_vec: Vec<GameState> = Vec::new();
@@ -400,7 +400,7 @@ fn main() {
             last_orange_score = state.orange_score;
         }
         if done {
-            gym.reset(None, None);
+            gym.reset(None, None, None);
             // state = gym._prev_state.clone();
         }
         // let info_val = *_info.get("result").unwrap();
@@ -428,7 +428,7 @@ fn main() {
 
     // now let's make sure ball touches are working
     gym._game_match._state_setter = Box::new(AgentBallHitStateTester::new());
-    gym.reset(None, None);
+    gym.reset(None, None, None);
     // gym.step(actions.clone());
     actions = vec![vec![2., 0., 0., 0., 0., 0., 0., 0.]];
 
@@ -459,7 +459,7 @@ fn main() {
             //     .sqrt();
         }
         if done {
-            gym.reset(None, None);
+            gym.reset(None, None, None);
             // state = gym._prev_state.clone();
         }
         // let info_val = *_info.get("result").unwrap();
@@ -521,7 +521,7 @@ fn main() {
     let mut gym = make::make(game_config, None);
 
     gym._game_match._state_setter = Box::new(DemoStateTester::new());
-    gym.reset(None, None);
+    gym.reset(None, None, None);
     // gym.step(actions.clone());
 
     let mut state_vec: Vec<GameState> = Vec::new();
@@ -540,7 +540,7 @@ fn main() {
         let (_obs, reward, done, _info, _) = gym.step(actions2.clone());
         let mut state = gym._prev_state.clone();
         if done {
-            gym.reset(None, None);
+            gym.reset(None, None, None);
             state = gym._prev_state.clone();
         }
         if state.players[0].is_demoed {

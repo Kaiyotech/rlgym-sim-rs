@@ -104,7 +104,7 @@ fn main() {
 
     // now let's make sure blue goals are working ---------------------------------------------------------------------------------------------------
     gym._game_match._state_setter = Box::new(BlueGoalStateTester::new());
-    gym.reset(None, None);
+    gym.reset(None, None, None);
 
     let mut state_vec: Vec<GameState> = Vec::new();
     state_vec.push(gym._prev_state.clone());
@@ -120,7 +120,7 @@ fn main() {
         if done {
             assert!(last_done_tick + ((tick_skip*2) as u64) < state.tick_num, "scored within {tick_skip}*2 ticks which is too close");
             last_done_tick = state.tick_num;
-            gym.reset(None, None);
+            gym.reset(None, None, None);
             state = gym._prev_state.clone();
         }
 
@@ -158,7 +158,7 @@ fn main() {
 
     // now let's make sure orange goals are working ---------------------------------------------------------------------------------------------------
     gym._game_match._state_setter = Box::new(OrangeGoalStateTester::new());
-    gym.reset(None, None);
+    gym.reset(None, None, None);
 
     let mut state_vec: Vec<GameState> = Vec::new();
     state_vec.push(gym._prev_state.clone());
@@ -177,7 +177,7 @@ fn main() {
         }
 
         if done {
-            gym.reset(None, None);
+            gym.reset(None, None, None);
         }
 
         if _i % 200 == 0 {
@@ -197,7 +197,7 @@ fn main() {
 
     // now let's make sure ball touches are working
     gym._game_match._state_setter = Box::new(AgentBallHitStateTester::new());
-    gym.reset(None, None);
+    gym.reset(None, None, None);
     actions = vec![vec![2., 0., 0., 0., 0., 0., 0., 0.]];
 
     let mut state_vec: Vec<GameState> = Vec::new();
@@ -215,7 +215,7 @@ fn main() {
             touch_counter += 1;
         }
         if done {
-            gym.reset(None, None);
+            gym.reset(None, None, None);
         }
 
         if _i % 200 == 0 {
@@ -263,7 +263,7 @@ fn main() {
     let mut gym = make::make(game_config, Some(render_config));
 
     gym._game_match._state_setter = Box::new(DemoStateTester::new());
-    gym.reset(None, None);
+    gym.reset(None, None, None);
 
     let mut state_vec: Vec<GameState> = Vec::new();
     state_vec.push(gym._prev_state.clone());
@@ -279,7 +279,7 @@ fn main() {
         let (_obs, reward, done, _info, _) = gym.step(actions2.clone());
         let mut state = gym._prev_state.clone();
         if done {
-            gym.reset(None, None);
+            gym.reset(None, None, None);
             state = gym._prev_state.clone();
         }
         if state.players[0].is_demoed {

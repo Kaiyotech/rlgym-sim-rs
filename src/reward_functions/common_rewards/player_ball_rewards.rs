@@ -16,7 +16,7 @@ impl VelocityPlayerToBallReward {
 }
 
 impl RewardFn for VelocityPlayerToBallReward {
-    fn reset(&mut self, _initial_state: &GameState) {}
+    fn reset(&mut self, _initial_state: &GameState, _: Option<usize>) {}
 
     fn get_reward(&mut self, player: &PlayerData, state: &GameState) -> f32 {
         let vel = &player.car_data.linear_velocity;

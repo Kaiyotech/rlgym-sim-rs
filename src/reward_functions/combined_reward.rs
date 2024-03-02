@@ -19,9 +19,9 @@ impl CombinedReward {
 }
 
 impl RewardFn for CombinedReward {
-    fn reset(&mut self, initial_state: &GameState) {
+    fn reset(&mut self, initial_state: &GameState, _: Option<usize>) {
         for struc in &mut self.reward_structs {
-            struc.reset(initial_state);
+            struc.reset(initial_state, None);
         }
     }
 

@@ -19,7 +19,7 @@ impl VelocityBallToGoalReward {
 }
 
 impl RewardFn for VelocityBallToGoalReward {
-    fn reset(&mut self, _initial_state: &GameState) {}
+    fn reset(&mut self, _initial_state: &GameState, _: Option<usize>) {}
 
     fn get_reward(&mut self, player: &PlayerData, state: &GameState) -> f32 {
         let objective: Position = if (player.team_num == BLUE_TEAM && !self.own_goal) || (player.team_num == ORANGE_TEAM && self.own_goal) {

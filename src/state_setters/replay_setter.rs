@@ -72,7 +72,9 @@ impl<'a> ReplaySetter<'a> {
 impl<'a> StateSetter for ReplaySetter<'a> {
     fn reset(&mut self, state_wrapper: &mut StateWrapper) {
         let index = self.rng.gen_range(0..self.states.dim().0);
+        // dbg!(index);
         let binding = self.states.index_axis(Axis(0), index);
+        // dbg!(binding);
         let state = binding.as_slice().unwrap();
         Self::set_ball(state_wrapper, state);
         self.set_cars(state_wrapper, state.to_owned());
@@ -107,7 +109,7 @@ mod tests{
         assert_eq!(state.ball.position.x, 2.);
         assert_eq!(state.players[0].car_data.position.x, 3.);
         assert_eq!(state.players[5].boost_amount, 4.);
-        assert!(state.boost_pads.iter().all(|x| *x != 0.));
+        assert!(state.boost_pads.iter().all(|x| (*x).state.is_active != false));
     }
 
     #[test]
@@ -184,7 +186,7 @@ mod tests{
         }
         let (state, _) = sim.set_state(wrapper, false);
         //it's technically possible for this to fail if all 34 pads roll true, but that seems unlikely, but just try it again
-        assert!(!state.boost_pads.iter().all(|x| *x != 0.));  
+        assert!(!state.boost_pads.iter().all(|x| (*x).state.is_active != false));  
     }
 
     fn make_test_array() -> ndarray::prelude::ArrayBase<ndarray::OwnedRepr<f32>, ndarray::prelude::Dim<[usize; 2]>> {

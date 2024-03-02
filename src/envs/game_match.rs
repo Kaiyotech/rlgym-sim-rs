@@ -102,11 +102,11 @@ impl GameMatch {
         }
     }
 
-    pub fn episode_reset(&mut self, initial_state: &GameState) {
+    pub fn episode_reset(&mut self, initial_state: &GameState, reward_stage: Option<usize>) {
         self._spectator_ids = initial_state.players.iter().map(|x| x.car_id).collect();
         self._prev_actions = vec![vec![0.; 8]; self.agents];
         self._terminal_condition.reset(initial_state);
-        self._reward_fn.reset(initial_state);
+        self._reward_fn.reset(initial_state, reward_stage);
         if self.use_single_obs {
             self._obs_builder[0].reset(initial_state);
         } else {

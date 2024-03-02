@@ -52,12 +52,12 @@ impl Gym {
         };
 
         gym._prev_state = gym.receive_state();
-        gym.reset(None, None);
+        gym.reset(None, None, None);
 
         gym
     }
 
-    pub fn reset(&mut self, _return_info: Option<bool>, seed: Option<u64>) -> (Vec<Vec<f32>>, GameState) {
+    pub fn reset(&mut self, _return_info: Option<bool>, seed: Option<u64>, reward_stage: Option<usize>) -> (Vec<Vec<f32>>, GameState) {
         // let _return_info = match _return_info {
         //     Some(return_info) => return_info,
         //     None => false
@@ -92,7 +92,7 @@ impl Gym {
             gym_state
         };
 
-        self._game_match.episode_reset(&gym_state);
+        self._game_match.episode_reset(&gym_state, reward_stage);
         self._prev_state = gym_state.clone();
 
         (self._game_match.build_observations(&gym_state), gym_state)
@@ -117,7 +117,7 @@ impl Gym {
                     if let Some(val) = val {
                         // irregular reset process (no state setters from the gym involved basically)
                         gym_state = self._game_match.sim_wrapper.set_state_sim(val);
-                        self._game_match.episode_reset(&gym_state);
+                        self._game_match.episode_reset(&gym_state, None);
                     }
                 },
                 Err(e) => {
