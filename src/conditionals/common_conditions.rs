@@ -19,9 +19,15 @@ impl TerminalCondition for TimeoutCondition {
     }
 
     fn is_terminal(&mut self, _current_state: &GameState) -> bool {
+        false
+    }
+    
+    fn is_truncated(&mut self, _current_state: &GameState) -> bool {
         self.steps += 1;
         self.steps >= self.max_steps
     }
+
+    
 }
 
 /// Returns a terminal signal when there have been no ball touches in max_steps
@@ -41,7 +47,11 @@ impl TerminalCondition for NoTouchTimeoutCondition {
         self.steps = 0
     }
 
-    fn is_terminal(&mut self, current_state: &GameState) -> bool {
+    fn is_terminal(&mut self, _current_state: &GameState) -> bool {
+        false
+    }
+
+    fn is_truncated(&mut self, current_state: &GameState) -> bool {
         if current_state.players.iter().any(|x| x.ball_touched) {
             self.steps = 0;
             false
@@ -81,5 +91,9 @@ impl TerminalCondition for GoalScoredCondition {
         } else {
             false
         }
+    }
+
+    fn is_truncated(&mut self, _current_state: &GameState) -> bool {
+        false
     }
 }

@@ -21,11 +21,12 @@ pub struct Gym {
     pub action_space: Vec<usize>,
     pub _prev_state: GameState,
     renderer: Option<Renderer>,
+    use_truncation: bool,
 }
 
 impl Gym {
     /// Creates a new instance of a gym and launches + connects to Rocket League instance
-    pub fn new(game_match: GameMatch, render_config: RenderConfig) -> Self {
+    pub fn new(game_match: GameMatch, render_config: RenderConfig, use_truncation: bool) -> Self {
         let observation_space = game_match.observation_space.clone();
         let action_space = game_match.action_space.clone();
         let renderer = if render_config.render {
@@ -49,6 +50,7 @@ impl Gym {
             action_space,
             _prev_state: GameState::new(),
             renderer,
+            use_truncation,
         };
 
         gym._prev_state = gym.receive_state();
@@ -144,11 +146,19 @@ impl Gym {
         };
 
         let obs = self._game_match.build_observations(&gym_state);
-        let done = self._game_match.is_done(&gym_state);
+        let mut done = self._game_match.is_done(&gym_state);
+        let truncated = self._game_match.is_truncated(&gym_state);
+        
         self._prev_state = gym_state.clone();
         let reward = self._game_match.get_rewards(&gym_state, done);
         let mut info = HashMap::<String, f32>::new();
         info.insert("result".to_string(), self._game_match.get_result(&gym_state) as f32);
+        if self.use_truncation{
+            info.insert("truncated".to_string(), truncated as u8 as f32);
+        }
+        else{
+            done = done || truncated;
+        }
         (obs, reward, done, info, gym_state)
     }
 

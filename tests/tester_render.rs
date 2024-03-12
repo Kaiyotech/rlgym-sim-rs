@@ -58,6 +58,15 @@ impl TerminalCondition for CombinedTerminalConditions {
         .iter()
         .any(|x| x == &true)
     }
+
+    fn is_truncated(&mut self, current_state: &GameState) -> bool {
+        [
+            self.timeout_condition.is_truncated(current_state),
+            self.goal_scored_condition.is_truncated(current_state),
+        ]
+        .iter()
+        .any(|x| x == &true)
+    }
 }
 
 
@@ -100,7 +109,7 @@ fn main() {
         // 3x as fast as realtime (120 tps)
         update_rate: 360.
     };
-    let mut gym = make::make(game_config, Some(render_config));
+    let mut gym = make::make(game_config, Some(render_config), None);
 
     // now let's make sure blue goals are working ---------------------------------------------------------------------------------------------------
     gym._game_match._state_setter = Box::new(BlueGoalStateTester::new());
@@ -260,7 +269,7 @@ fn main() {
         action_parser: act_parse,
         state_setter: state_set, 
     };
-    let mut gym = make::make(game_config, Some(render_config));
+    let mut gym = make::make(game_config, Some(render_config), None);
 
     gym._game_match._state_setter = Box::new(DemoStateTester::new());
     gym.reset(None, None, None);

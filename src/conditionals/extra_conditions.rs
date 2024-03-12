@@ -25,6 +25,11 @@ impl TerminalCondition for CombinedTerminalConditions {
         self.conditionals.iter_mut().map(|f| f.is_terminal(current_state))
         .any(|x| x)
     }
+
+    fn is_truncated(&mut self, current_state: &GameState) -> bool {
+        self.conditionals.iter_mut().map(|f| f.is_truncated(current_state))
+        .any(|x| x)
+    }
 }
 
 /// Returns a terminal signal when the ball is at x: 0, y: 0 after the specified steps
@@ -44,7 +49,11 @@ impl TerminalCondition for NoTouchKickoffTimeoutCondition {
         self.steps = 0
     }
 
-    fn is_terminal(&mut self, current_state: &GameState) -> bool {
+    fn is_terminal(&mut self, _current_state: &GameState) -> bool {
+        false
+    }
+
+    fn is_truncated(&mut self, current_state: &GameState) -> bool {
         if current_state.ball.position.x == 0. && current_state.ball.position.y == 0. {
             if current_state.players.iter().any(|x| x.ball_touched) {
                 self.steps = 0;

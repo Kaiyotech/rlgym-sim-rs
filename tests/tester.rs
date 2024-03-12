@@ -39,9 +39,9 @@ pub struct CombinedTerminalConditions {
 }
 
 impl CombinedTerminalConditions {
-    pub fn new(tick_skip: usize) -> Self {
+    pub fn new(tick_skip: usize, timeout: Option<usize>) -> Self {
         CombinedTerminalConditions {
-            timeout_condition: TimeoutCondition::new(400 * 120 / tick_skip as i64),
+            timeout_condition: TimeoutCondition::new((timeout.unwrap_or(400) * 120 / tick_skip) as i64),
             goal_scored_condition: GoalScoredCondition::new(),
         }
     }
@@ -57,6 +57,15 @@ impl TerminalCondition for CombinedTerminalConditions {
         [
             self.timeout_condition.is_terminal(current_state),
             self.goal_scored_condition.is_terminal(current_state),
+        ]
+        .iter()
+        .any(|x| x == &true)
+    }
+
+    fn is_truncated(&mut self, current_state: &GameState) -> bool {
+        [
+            self.timeout_condition.is_truncated(current_state),
+            self.goal_scored_condition.is_truncated(current_state),
         ]
         .iter()
         .any(|x| x == &true)
@@ -85,7 +94,7 @@ fn main() {
     let obs = vec![vec![93, 93, 93], vec![92, 93, 93], vec![91, 93, 93]];
     let mut vec = Vec::<Vec<i32>>::new();
     vec.extend(obs);
-    let term_cond = Box::new(CombinedTerminalConditions::new(1));
+    let term_cond = Box::new(CombinedTerminalConditions::new(1, Some(400)));
     // let term_cond = Box::new(TimeoutCondition::new(225));
     let reward_fn = Box::new(EventReward::new(None, None, None, None, None, None, None, None));
     let obs_build: Box<dyn ObsBuilder> = Box::new(AdvancedObs::new());
@@ -122,7 +131,7 @@ fn main() {
         action_parser: act_parse,
         state_setter: state_set, 
     };
-    let mut gym = make::make(game_config, None);
+    let mut gym = make::make(game_config, None, None);
 
     // let obs = gym.reset(None, None, None);
     // last_state;
@@ -487,7 +496,7 @@ fn main() {
     println!("touches: {touch_counter}");
 
     // now let's make sure demos are working ---------------------------------------------------------------------------------------------------
-    let term_cond = Box::new(CombinedTerminalConditions::new(1));
+    let term_cond = Box::new(CombinedTerminalConditions::new(1, Some(400)));
     // let term_cond = Box::new(TimeoutCondition::new(225));
     let reward_fn = Box::new(EventReward::new(None, None, None, None, None, None, None, None));
     // let obs_build: Box<dyn ObsBuilder> = Box::new(AdvancedObs::new());
@@ -518,7 +527,7 @@ fn main() {
         action_parser: act_parse,
         state_setter: state_set, 
     };
-    let mut gym = make::make(game_config, None);
+    let mut gym = make::make(game_config, None, None);
 
     gym._game_match._state_setter = Box::new(DemoStateTester::new());
     gym.reset(None, None, None);
@@ -602,4 +611,68 @@ fn main() {
     // gym.close();
     // println!("waiting");
     // stdin().read_line(&mut String::new()).unwrap();
+
+    // now let's make sure truncation is working ---------------------------------------------------------------------------------------------------
+    let term_cond = Box::new(CombinedTerminalConditions::new(1, Some(10)));
+    // let term_cond = Box::new(TimeoutCondition::new(225));
+    let reward_fn = Box::new(EventReward::new(None, None, None, None, None, None, None, None));
+    // let obs_build: Box<dyn ObsBuilder> = Box::new(AdvancedObs::new());
+    // let obs_build_vec = vec![obs_build];
+    let mut obs_build_vec: Vec<Box<dyn ObsBuilder>> = Vec::new();
+    for _ in 0..2 {
+        obs_build_vec.push(Box::new(AdvancedObs::new()));
+    }
+    let act_parse = Box::new(TestAction::new());
+    let state_set = Box::new(DefaultStateTester::new());
+    // let actions = vec![vec![2., 1., 0., 1., 0., 1., 0., 1.]];
+    // rocketsim_rs::init(None);
+    let tick_skip = 1;
+    let config = GameConfig {
+        tick_skip,
+        spawn_opponents: true,
+        team_size: 1,
+        gravity: 1.,
+        boost_consumption: 1.,
+    };
+    let game_config = make::MakeConfig {
+        game_config: config,
+        terminal_condition: term_cond,
+        reward_fn,
+        obs_builder: obs_build_vec,
+        use_single_obs: true,
+        action_parser: act_parse,
+        state_setter: state_set, 
+    };
+    let mut gym = make::make(game_config, None, Some(true));
+
+    gym._game_match._state_setter = Box::new(DefaultStateTester::new());
+    gym.reset(None, None, None);
+    // gym.step(actions.clone());
+
+    let start_time = Instant::now();
+    let actions2 = vec![vec![0., 0., 0., 0., 0., 0., 0., 0.], vec![0., 0., 0., 0., 0., 0., 0., 0.]];
+    // let mut last_blue_score_tick = 0;
+    // let mut last_done_tick = 0;
+    let mut got_truncated = false;
+    gym.step(actions2.clone());  // step once to clean up the goal conditionals
+    gym.reset(None, None, None);
+    for _i in 0..(120 * 11) {
+        let (_obs, _reward, done, info, _) = gym.step(actions2.clone());
+        assert!(!done);
+        let (_k, v) = info.get_key_value("truncated").unwrap();
+        got_truncated = *v > 0.;
+        if got_truncated{
+            break;
+        }
+        dbg!(_i);
+    }
+    assert!(got_truncated);
+    // let (_obs, reward, done, _info) = gym.step(actions.clone());
+
+    let duration = start_time.elapsed();
+    let seconds_elapsed = duration.as_secs_f64();
+    println!("seconds elapsed: {seconds_elapsed}");
+    let fps = (120. * 360.) / seconds_elapsed;
+    println!("fps: {fps}");
+    println!("rewards: {rew_val}");
 }

@@ -114,7 +114,7 @@ impl Default for RenderConfig {
 /// 
 /// let mut gym = make::make(game_config, None);
 /// ```
-pub fn make(mut config: MakeConfig, render_config: Option<RenderConfig>) -> Gym {
+pub fn make(mut config: MakeConfig, render_config: Option<RenderConfig>, use_truncation: Option<bool>) -> Gym {
     // let game_speed = game_config.game_speed.unwrap_or(100.);
     let tick_skip = config.game_config.tick_skip;
     config.game_config.tick_skip = if tick_skip == 0 {
@@ -126,6 +126,8 @@ pub fn make(mut config: MakeConfig, render_config: Option<RenderConfig>) -> Gym 
     } else {
         tick_skip
     };
+
+    let use_truncation = use_truncation.unwrap_or(false);
     // let spawn_opponents = config.spawn_opponents.unwrap_or(true);
     // let team_size = config.team_size.unwrap_or(1);
     // let gravity = config.gravity.unwrap_or(1.);
@@ -139,5 +141,5 @@ pub fn make(mut config: MakeConfig, render_config: Option<RenderConfig>) -> Gym 
         // Some(spawn_opponents),
     );
 
-    Gym::new(game_match, render_config.unwrap_or_default())
+    Gym::new(game_match, render_config.unwrap_or_default(), use_truncation)
 }

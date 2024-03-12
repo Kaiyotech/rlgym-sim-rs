@@ -46,6 +46,15 @@ impl TerminalCondition for CombinedTerminalConditions {
         .iter()
         .any(|x| x == &true)
     }
+
+    fn is_truncated(&mut self, current_state: &GameState) -> bool {
+        [
+            self.timeout_condition.is_truncated(current_state),
+            self.goal_scored_condition.is_truncated(current_state),
+        ]
+        .iter()
+        .any(|x| x == &true)
+    }
 }
 
 
@@ -83,7 +92,7 @@ fn main() {
         action_parser: act_parse,
         state_setter: state_set, 
     };
-    let mut gym = make::make(game_config, None);
+    let mut gym = make::make(game_config, None, None);
 
     // -- start testing self-play=false --
 

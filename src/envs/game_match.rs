@@ -165,6 +165,10 @@ impl GameMatch {
         self._terminal_condition.is_terminal(state)
     }
 
+    pub fn is_truncated(&mut self, state: &GameState) -> bool{
+        self._terminal_condition.is_truncated(state)
+    }
+
     pub fn get_result(&self, state: &GameState) -> i32 {
         let current_score = state.blue_score - state.orange_score;
         current_score - self._initial_score
