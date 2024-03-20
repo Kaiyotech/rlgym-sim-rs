@@ -22,6 +22,9 @@ use crate::{
 ///     state_setters::default_state::DefaultState,
 ///     make,
 /// };
+///
+/// use rocketsim_rs::sim::CarConfig;
+///
 /// 
 /// rocketsim_rs::init(None);
 /// 
@@ -31,6 +34,7 @@ use crate::{
 ///     team_size: 1,
 ///     gravity: 1.,
 ///     boost_consumption: 1.,
+///     car_config: CarConfig::octane(),
 /// };
 /// 
 /// let game_config = make::MakeConfig {
@@ -43,7 +47,7 @@ use crate::{
 ///     state_setter: Box::new(DefaultState::new(None)), 
 /// };
 /// 
-/// let mut gym = make::make(game_config, None);
+/// let mut gym = make::make(game_config, None, None);
 /// ```
 pub struct MakeConfig {
     pub game_config: GameConfig,
@@ -91,6 +95,8 @@ impl Default for RenderConfig {
 ///     state_setters::default_state::DefaultState,
 ///     make,
 /// };
+///
+/// use rocketsim_rs::sim::CarConfig;
 /// 
 /// rocketsim_rs::init(None);
 /// 
@@ -100,6 +106,7 @@ impl Default for RenderConfig {
 ///     team_size: 1,
 ///     gravity: 1.,
 ///     boost_consumption: 1.,
+///     car_config: CarConfig::octane(),
 /// };
 /// 
 /// let game_config = make::MakeConfig {
@@ -112,7 +119,7 @@ impl Default for RenderConfig {
 ///     state_setter: Box::new(DefaultState::new(None)), 
 /// };
 /// 
-/// let mut gym = make::make(game_config, None);
+/// let mut gym = make::make(game_config, None, None);
 /// ```
 pub fn make(mut config: MakeConfig, render_config: Option<RenderConfig>, use_truncation: Option<bool>) -> Gym {
     // let game_speed = game_config.game_speed.unwrap_or(100.);
@@ -134,11 +141,6 @@ pub fn make(mut config: MakeConfig, render_config: Option<RenderConfig>, use_tru
     // let boost_consumption = config.boost_consumption.unwrap_or(1.);
     let game_match = GameMatch::new(
         config,
-        // Some(team_size),
-        // Some(tick_skip),
-        // Some(gravity),
-        // Some(boost_consumption),
-        // Some(spawn_opponents),
     );
 
     Gym::new(game_match, render_config.unwrap_or_default(), use_truncation)
