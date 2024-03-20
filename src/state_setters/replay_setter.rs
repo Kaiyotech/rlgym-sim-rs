@@ -89,6 +89,7 @@ impl<'a> StateSetter for ReplaySetter<'a> {
 mod tests{
     use ndarray::Array2;
     use ndarray_npy::write_npy;
+    use rocketsim_rs::sim::CarConfig;
     use crate::sim_wrapper::wrapper::RocketsimWrapper;
     use super::*;
     
@@ -96,7 +97,7 @@ mod tests{
     fn replay_setter_load_threes(){
         rocketsim_rs::init(None);
         let gameconfig = crate::envs::game_match::GameConfig{team_size: 3, spawn_opponents: true,
-             gravity: 1., boost_consumption: 1., tick_skip: 8};
+             gravity: 1., boost_consumption: 1., tick_skip: 8, car_config: CarConfig::octane(),};
         let mut sim = RocketsimWrapper::new(gameconfig);
         let (state, _) = sim.get_rlgym_gamestate(false);
         let array_to_write = make_test_array();
@@ -116,7 +117,7 @@ mod tests{
     fn replay_setter_load_ones(){
         rocketsim_rs::init(None);
         let gameconfig = crate::envs::game_match::GameConfig{team_size: 1, spawn_opponents: true,
-            gravity: 1., boost_consumption: 1., tick_skip: 8};
+            gravity: 1., boost_consumption: 1., tick_skip: 8, car_config: CarConfig::octane(),};
         let mut sim = RocketsimWrapper::new(gameconfig);
         let (state, _) = sim.get_rlgym_gamestate(false);
         let pos_ball_0_x = 0;
@@ -153,7 +154,7 @@ mod tests{
     fn replay_setter_random_boost(){
         rocketsim_rs::init(None);
         let gameconfig = crate::envs::game_match::GameConfig{team_size: 3, spawn_opponents: true,
-             gravity: 1., boost_consumption: 1., tick_skip: 8};
+             gravity: 1., boost_consumption: 1., tick_skip: 8, car_config: CarConfig::octane(),};
         let mut sim = RocketsimWrapper::new(gameconfig);
         let (state, _) = sim.get_rlgym_gamestate(false);
         let array_to_write = make_test_array();
@@ -170,7 +171,7 @@ mod tests{
     fn replay_setter_random_pads(){
         rocketsim_rs::init(None);
         let gameconfig = crate::envs::game_match::GameConfig{team_size: 3, spawn_opponents: true,
-             gravity: 1., boost_consumption: 1., tick_skip: 8};
+             gravity: 1., boost_consumption: 1., tick_skip: 8, car_config: CarConfig::octane(),};
         let mut sim = RocketsimWrapper::new(gameconfig);
         let (state, _) = sim.get_rlgym_gamestate(false);
         let array_to_write = make_test_array();
