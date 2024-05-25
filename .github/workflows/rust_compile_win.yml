@@ -1,4 +1,4 @@
-name: Rust
+name: Windows Build & Test
 
 on:
   push:
@@ -15,7 +15,6 @@ jobs:
     timeout-minutes: 25
     steps:
     - uses: actions/checkout@v4
-    - uses: GuillaumeFalourd/setup-windows10-sdk-action@v1.12
     - run: rustup toolchain install stable --profile minimal
     - uses: Swatinem/rust-cache@v2.6.2
     - name: Decrypt meshes
@@ -26,7 +25,13 @@ jobs:
         for FILE in collision_meshes/**/*.gpg; do
           gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" --output "${FILE%.gpg}" "$FILE"
         done
-    - name: Build
-      run: cargo build --verbose
+    - name: Setup LLVM and cargo build
+      shell: cmd
+      run: |
+        set PATH=%PATH:C:\Program Files\LLVM\bin;=%
+        cargo build --verbose
     - name: Run tests
-      run: cargo test --verbose
+      shell: cmd
+      run: | 
+        set PATH=%PATH:C:\Program Files\LLVM\bin;=%
+        cargo test --verbose
